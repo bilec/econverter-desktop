@@ -5,6 +5,10 @@ on:
     branches: [master]
   pull_request:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -42,7 +46,7 @@ jobs:
           test -s book.mobi
           uv run --with reportlab python -c "
           from reportlab.pdfgen import canvas
-          c = canvas.Canvas('book.pdf'); c.drawString(72, 720, 'Extractable text'); c.save()
+          c = canvas.Canvas('from-pdf.pdf'); c.drawString(72, 720, 'Extractable text'); c.save()
           "
-          uv run python -m econverter_desktop book.pdf epub
-          test -s book.epub
+          uv run python -m econverter_desktop from-pdf.pdf epub
+          test -s from-pdf.epub

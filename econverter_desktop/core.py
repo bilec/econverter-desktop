@@ -6,74 +6,36 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-INPUT_FORMATS = (
-    "azw",
-    "azw3",
-    "azw4",
-    "cbc",
-    "cbr",
-    "cbz",
-    "chm",
-    "djv",
-    "djvu",
-    "docm",
-    "docx",
-    "epub",
-    "fb2",
-    "fbz",
-    "htm",
-    "html",
-    "htmlz",
-    "lrf",
-    "markdown",
-    "md",
-    "mobi",
-    "odt",
-    "opf",
-    "pdb",
-    "pdf",
-    "pobi",
-    "prc",
-    "rtf",
-    "shtm",
-    "shtml",
-    "text",
-    "textile",
-    "txt",
-    "txtz",
-    "updb",
-    "xhtm",
-    "xhtml",
-)
+from ebook_converter.customize.ui import available_output_formats, input_format_plugins
 
-OUTPUT_FORMATS = (
-    "epub",
-    "mobi",
-    "azw3",
-    "docx",
-    "fb2",
-    "html",
-    "htmlz",
-    "lrf",
-    "oeb",
-    "txt",
-    "txtz",
-)
+# These plugins are registered but ebook-converter-lib ships no implementation for them,
+# so offering them would only ever produce ModuleNotFoundError at conversion time.
+# Upstream plans to deregister them; test_exclusion_is_still_needed then fails.
+UNIMPLEMENTED_INPUTS = frozenset({"cbc", "cbr", "cbz", "chm", "djv", "djvu"})
 
-POPPLER_TOOLS = ("pdftohtml", "pdfinfo", "pdftoppm")
+# Derived from the plugins, not available_input_formats(), which also advertises
+# zip and rar despite no plugin handling either.
+INPUT_FORMATS = tuple(
+    sorted(
+        {f for plugin in input_format_plugins() for f in plugin.file_types} - UNIMPLEMENTED_INPUTS
+    )
+)
+OUTPUT_FORMATS = tuple(sorted(available_output_formats()))
+DEFAULT_OUTPUT = "epub"
+
+POPPLER_TOOL = "pdftohtml"
 
 
 @dataclass(frozen=True)
 class Result:
     success: bool
     message: str
-    output: Path | None = None
 
 
-def _convert(src: str, dst: str, *args: str) -> dict:
+def _convert(src: str, dst: str) -> dict:
     from ebook_converter_lib import convert
 
-    return convert(src, dst, *args)
+    return convert(src, dst)
 
 
 def is_supported_input(path: Path) -> bool:
@@ -87,8 +49,8 @@ def output_path(src: Path, fmt: str, dest_dir: Path | None = None) -> Path:
     return (dest_dir or src.parent) / f"{src.stem}.{fmt}"
 
 
-def missing_poppler_tools() -> list[str]:
-    return [tool for tool in POPPLER_TOOLS if shutil.which(tool) is None]
+def poppler_available() -> bool:
+    return shutil.which(POPPLER_TOOL) is not None
 
 
 def convert_file(src: Path, fmt: str, dest_dir: Path | None = None) -> Result:
@@ -102,11 +64,14 @@ def convert_file(src: Path, fmt: str, dest_dir: Path | None = None) -> Result:
     except ValueError as exc:
         return Result(False, str(exc))
 
+    if dst == src:
+        return Result(False, f"{src.name} is already {fmt}; choose another output folder")
+
     try:
         result = _convert(str(src), str(dst))
     except Exception as exc:  # noqa: BLE001 - a bad book must not kill the GUI
         return Result(False, f"{type(exc).__name__}: {exc}")
 
     if result.get("success"):
-        return Result(True, result.get("message") or f"created {dst.name}", dst)
+        return Result(True, result.get("message") or f"created {dst.name}")
     return Result(False, result.get("message") or "conversion failed")
