@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            binary: dist/eConverter.app/Contents/MacOS/econverter
+            artifact: eConverter-macos-arm64
+          - os: ubuntu-latest
+            binary: dist/econverter/econverter
+            artifact: eConverter-linux-x86_64
+          - os: windows-latest
+            binary: dist/econverter/econverter.exe
+            artifact: eConverter-windows-x86_64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --group dev
+      - run: uv run pytest -q
+      - run: uv run pyinstaller --noconfirm --clean econverter.spec
+
+      # A build that compiles but cannot convert is worse than no build.
+      - name: Smoke-test the frozen binary
+        shell: bash
+        run: |
+          printf '# Title\n\nBody text.\n' > book.md
+          "${{ matrix.binary }}" book.md epub
+          test -s book.epub
+          "${{ matrix.binary }}" book.epub mobi
+          test -s book.mobi
+          uv run --with reportlab python -c "
+          from reportlab.pdfgen import canvas
+          c = canvas.Canvas('book.pdf'); c.drawString(72, 720, 'Extractable text'); c.save()
+          "
+          "${{ matrix.binary }}" book.pdf epub
+          test -s book.epub
+
+      - name: Package (macOS)
+        if: runner.os == 'macOS'
+        run: ditto -c -k --keepParent dist/eConverter.app ${{ matrix.artifact }}.zip
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        run: tar -czf ${{ matrix.artifact }}.tar.gz -C dist econverter
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        run: Compress-Archive -Path dist/econverter -DestinationPath ${{ matrix.artifact }}.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            *.zip
+            *.tar.gz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+          generate_release_notes: true
+          body: |
+            Unsigned builds. macOS: right-click → Open, or
+            `xattr -dr com.apple.quarantine eConverter.app`.
+
+            PDF input works out of the box (text-only). Install Poppler
+            (`pdftohtml`, `pdfinfo`, `pdftoppm`) to also keep images and layout.
