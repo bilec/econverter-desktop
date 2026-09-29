@@ -17,18 +17,15 @@ unsigned: on macOS use right-click → Open, or run
 
 ## Supported formats
 
-Input: `azw`, `azw3`, `azw4`, `docm`, `docx`, `epub`, `fb2`, `fbz`, `htm`,
-`html`, `htmlz`, `lrf`, `markdown`, `md`, `mobi`, `odt`, `opf`, `pdb`, `pdf`,
-`pobi`, `prc`, `rtf`, `shtm`, `shtml`, `text`, `textile`, `txt`, `txtz`, `updb`,
-`xhtm`, `xhtml`
+Input: `azw`, `azw3`, `docm`, `docx`, `epub`, `fb2`, `fbz`, `htm`, `html`,
+`htmlz`, `lrf`, `markdown`, `md`, `mobi`, `odt`, `opf`, `pdb`, `pdf`, `pobi`,
+`prc`, `rtf`, `shtm`, `shtml`, `text`, `textile`, `txt`, `txtz`, `updb`, `xhtm`,
+`xhtml`
 
 Output: `azw3`, `docx`, `epub`, `fb2`, `html`, `htmlz`, `lrf`, `mobi`, `oeb`,
 `txt`, `txtz`
 
 The lists are read from the conversion engine at startup, so they cannot drift.
-Comic (`cbz`, `cbr`, `cbc`), `djvu`/`djv` and `chm` are deliberately excluded:
-`ebook-converter-lib` registers those plugins but ships no implementation for
-them, so they can only fail.
 
 PDF input supports text-based PDFs. Scanned PDFs require OCR, which is not
 supported here.

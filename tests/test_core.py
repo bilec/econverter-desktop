@@ -33,7 +33,7 @@ def test_formats_come_from_the_engine():
     from ebook_converter.customize.ui import available_output_formats, input_format_plugins
 
     expected = {fmt for plugin in input_format_plugins() for fmt in plugin.file_types}
-    assert core.INPUT_FORMATS == tuple(sorted(expected - core.UNIMPLEMENTED_INPUTS))
+    assert core.INPUT_FORMATS == tuple(sorted(expected))
     assert core.OUTPUT_FORMATS == tuple(sorted(available_output_formats()))
 
 
@@ -41,14 +41,6 @@ def test_unimplemented_archives_are_not_offered():
     """available_input_formats() advertises zip/rar, but no plugin handles them."""
     assert "zip" not in core.INPUT_FORMATS
     assert "rar" not in core.INPUT_FORMATS
-
-
-def test_exclusion_is_still_needed():
-    """Fails once ebook-converter-lib deregisters these plugins: delete UNIMPLEMENTED_INPUTS."""
-    from ebook_converter.customize.ui import input_format_plugins
-
-    advertised = {fmt for plugin in input_format_plugins() for fmt in plugin.file_types}
-    assert advertised & core.UNIMPLEMENTED_INPUTS
 
 
 def test_real_formats_are_offered():

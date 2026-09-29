@@ -8,18 +8,9 @@ from pathlib import Path
 
 from ebook_converter.customize.ui import available_output_formats, input_format_plugins
 
-# These plugins are registered but ebook-converter-lib ships no implementation for them,
-# so offering them would only ever produce ModuleNotFoundError at conversion time.
-# Upstream plans to deregister them; test_exclusion_is_still_needed then fails.
-UNIMPLEMENTED_INPUTS = frozenset({"cbc", "cbr", "cbz", "chm", "djv", "djvu"})
-
 # Derived from the plugins, not available_input_formats(), which also advertises
 # zip and rar despite no plugin handling either.
-INPUT_FORMATS = tuple(
-    sorted(
-        {f for plugin in input_format_plugins() for f in plugin.file_types} - UNIMPLEMENTED_INPUTS
-    )
-)
+INPUT_FORMATS = tuple(sorted({f for plugin in input_format_plugins() for f in plugin.file_types}))
 OUTPUT_FORMATS = tuple(sorted(available_output_formats()))
 DEFAULT_OUTPUT = "epub"
 
