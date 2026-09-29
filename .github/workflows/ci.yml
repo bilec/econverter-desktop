@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --group dev
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv sync --group dev
+      - run: uv run pytest -q
+      # Conversion must work on every OS, not just where tests are mocked.
+      # No Poppler is installed here on purpose: PDF must work via the pypdf fallback.
+      - name: Convert real books
+        shell: bash
+        run: |
+          printf '# Title\n\nBody text.\n' > book.md
+          uv run python -m econverter_desktop book.md epub
+          test -s book.epub
+          uv run python -m econverter_desktop book.epub mobi
+          test -s book.mobi
+          uv run --with reportlab python -c "
+          from reportlab.pdfgen import canvas
+          c = canvas.Canvas('book.pdf'); c.drawString(72, 720, 'Extractable text'); c.save()
+          "
+          uv run python -m econverter_desktop book.pdf epub
+          test -s book.epub
