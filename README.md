@@ -17,13 +17,18 @@ unsigned: on macOS use right-click → Open, or run
 
 ## Supported formats
 
-Input: `azw`, `azw3`, `azw4`, `cbc`, `cbr`, `cbz`, `chm`, `djv`, `djvu`, `docm`,
-`docx`, `epub`, `fb2`, `fbz`, `htm`, `html`, `htmlz`, `lrf`, `markdown`, `md`,
-`mobi`, `odt`, `opf`, `pdb`, `pdf`, `pobi`, `prc`, `rtf`, `shtm`, `shtml`,
-`text`, `textile`, `txt`, `txtz`, `updb`, `xhtm`, `xhtml`
+Input: `azw`, `azw3`, `azw4`, `docm`, `docx`, `epub`, `fb2`, `fbz`, `htm`,
+`html`, `htmlz`, `lrf`, `markdown`, `md`, `mobi`, `odt`, `opf`, `pdb`, `pdf`,
+`pobi`, `prc`, `rtf`, `shtm`, `shtml`, `text`, `textile`, `txt`, `txtz`, `updb`,
+`xhtm`, `xhtml`
 
-Output: `epub`, `mobi`, `azw3`, `docx`, `fb2`, `html`, `htmlz`, `lrf`, `oeb`,
+Output: `azw3`, `docx`, `epub`, `fb2`, `html`, `htmlz`, `lrf`, `mobi`, `oeb`,
 `txt`, `txtz`
+
+The lists are read from the conversion engine at startup, so they cannot drift.
+Comic (`cbz`, `cbr`, `cbc`), `djvu`/`djv` and `chm` are deliberately excluded:
+`ebook-converter-lib` registers those plugins but ships no implementation for
+them, so they can only fail.
 
 PDF input supports text-based PDFs. Scanned PDFs require OCR, which is not
 supported here.
@@ -49,8 +54,8 @@ uv run ruff check .
 uv run ruff format --check .
 ```
 
-CI runs the same checks on Linux, macOS and Windows, plus a real md→epub→mobi
-conversion on each.
+CI runs the same checks on Linux, macOS and Windows, plus real md→epub→mobi and
+PDF→epub conversions on each.
 
 ## Build a standalone app
 

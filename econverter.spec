@@ -18,7 +18,6 @@ a = Analysis(
     binaries=binaries,
     datas=datas + [("assets/icon.png", "assets")],
     hiddenimports=hiddenimports,
-    excludes=["pytest"],
     noarchive=False,
 )
 pyz = PYZ(a.pure)

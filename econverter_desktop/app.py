@@ -52,7 +52,7 @@ class App(ttk.Frame):
         options = ttk.Frame(self)
         options.grid(row=2, column=0, sticky="ew")
         ttk.Label(options, text="Convert to:").pack(side="left")
-        self.fmt = tk.StringVar(value=core.OUTPUT_FORMATS[0])
+        self.fmt = tk.StringVar(value=core.DEFAULT_OUTPUT)
         ttk.Combobox(
             options,
             textvariable=self.fmt,
@@ -71,7 +71,7 @@ class App(ttk.Frame):
         self.log.grid(row=4, column=0, sticky="nsew")
         self.rowconfigure(4, weight=1)
 
-        if core.missing_poppler_tools():
+        if not core.poppler_available():
             self._write(
                 "Note: Poppler not found - PDF input falls back to text-only "
                 "extraction (no images or layout). Install Poppler for better results."
@@ -134,7 +134,9 @@ def main() -> None:
     root.geometry("560x520")
     icon = asset("icon.png")
     if icon.is_file():
-        root.iconphoto(True, tk.PhotoImage(file=str(icon)))
+        # Tk drops the icon if the image is garbage collected, so keep a reference.
+        root.icon_image = tk.PhotoImage(file=str(icon))
+        root.iconphoto(True, root.icon_image)
     App(root)
     root.mainloop()
 

@@ -7,9 +7,6 @@ license = { text = "GPL-3.0-or-later" }
 requires-python = ">=3.11"
 dependencies = ["ebook-converter-lib>=1.0.1"]
 
-[project.gui-scripts]
-econverter-desktop = "econverter_desktop.app:main"
-
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.6", "pyinstaller>=6.10"]
 

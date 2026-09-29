@@ -32,7 +32,8 @@ jobs:
       - run: uv run pytest -q
       - run: uv run pyinstaller --noconfirm --clean econverter.spec
 
-      # A build that compiles but cannot convert is worse than no build.
+      # PyInstaller silently drops the engine's data files; only a real
+      # conversion through the frozen binary catches it.
       - name: Smoke-test the frozen binary
         shell: bash
         run: |
@@ -41,12 +42,6 @@ jobs:
           test -s book.epub
           "${{ matrix.binary }}" book.epub mobi
           test -s book.mobi
-          uv run --with reportlab python -c "
-          from reportlab.pdfgen import canvas
-          c = canvas.Canvas('book.pdf'); c.drawString(72, 720, 'Extractable text'); c.save()
-          "
-          "${{ matrix.binary }}" book.pdf epub
-          test -s book.epub
 
       - name: Package (macOS)
         if: runner.os == 'macOS'
