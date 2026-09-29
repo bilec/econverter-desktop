@@ -113,18 +113,11 @@ def test_convert_file_allows_same_format_into_another_folder(tmp_path, monkeypat
     assert core.convert_file(src, "epub", dest).success
 
 
-def test_pdf_converts_without_poppler(monkeypatch, tmp_path):
-    """The engine falls back to pypdf text extraction, so PDF must not be blocked."""
+def test_pdf_is_a_supported_input(tmp_path, monkeypatch):
+    """PDF never needs external binaries: the engine falls back to pypdf."""
     src = tmp_path / "book.pdf"
     src.write_bytes(b"x")
-    monkeypatch.setattr(core.shutil, "which", lambda _: None)
     monkeypatch.setattr(core, "_convert", lambda *a, **k: {"success": True, "message": "ok"})
 
+    assert "pdf" in core.INPUT_FORMATS
     assert core.convert_file(src, "epub").success
-
-
-def test_poppler_available(monkeypatch):
-    monkeypatch.setattr(core.shutil, "which", lambda _: None)
-    assert not core.poppler_available()
-    monkeypatch.setattr(core.shutil, "which", lambda name: f"/usr/bin/{name}")
-    assert core.poppler_available()

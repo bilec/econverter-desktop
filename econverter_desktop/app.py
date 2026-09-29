@@ -71,12 +71,6 @@ class App(ttk.Frame):
         self.log.grid(row=4, column=0, sticky="nsew")
         self.rowconfigure(4, weight=1)
 
-        if not core.poppler_available():
-            self._write(
-                "Note: Poppler not found - PDF input falls back to text-only "
-                "extraction (no images or layout). Install Poppler for better results."
-            )
-
     def add_files(self) -> None:
         for name in filedialog.askopenfilenames(title="Select ebooks", filetypes=FILE_TYPES):
             path = Path(name)

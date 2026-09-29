@@ -1,0 +1,59 @@
+---
+description: Repo-specific review rules for econverter-desktop
+alwaysApply: true
+---
+
+# Code review rules
+
+## Reject
+
+- **Hardcoded format lists.** `INPUT_FORMATS` and `OUTPUT_FORMATS` must be
+  derived from the engine. A literal tuple of extensions has already shipped
+  wrong twice.
+- **`available_input_formats()`.** It advertises `zip` and `rar`, which no
+  plugin implements. Use `input_format_plugins()`.
+- **GUI imports in `core.py`.** `core` must stay importable and testable
+  without a display.
+- **Tk calls from the worker thread.** Post to `App.events`; only `_poll` on
+  the main thread touches widgets.
+- **Exceptions escaping `convert_file`.** A malformed book must produce a
+  failed `Result`, never a traceback in the UI.
+- **Real conversions in `tests/`.** Monkeypatch `core._convert`. Real
+  conversions belong in CI against the frozen binary.
+- **Writing a conversion output over its own input.** Any change to
+  `output_path` or `convert_file` must preserve the `dst == src` guard.
+- **New `[project.scripts]` / `[project.gui-scripts]`** unless `assets/` is
+  also added to the wheel. Otherwise the installed GUI silently loses its icon.
+
+## Scrutinise
+
+- Changes to `econverter.spec`: `collect_all` removals, new `excludes`, or
+  icon path changes need a rebuild plus a real conversion through the bundle,
+  not just a successful build.
+- Anything importing from `ebook_converter.*` (the engine's internals rather
+  than `ebook_converter_lib`): it works, but an upstream refactor breaks
+  startup. Require a test that fails loudly.
+- New external binary dependencies. PDF works with no external tools via the
+  engine's `pypdf` fallback; making one mandatory is a behaviour change.
+- UI notices about optional external tools. The Android app does not surface
+  them and neither should this one.
+- Temporary compatibility shims. They need a test that fails when the shim
+  becomes unnecessary, otherwise they become permanent.
+
+## Severity calibration
+
+- Data loss (overwriting user files) and silently advertising capability the
+  engine lacks are the two highest-severity classes here. Both have shipped.
+- Platform-specific paths that no test executes (Windows `AttachConsole`,
+  macOS `-psn_` arguments) warrant a comment even when the code looks right,
+  because CI will not catch a mistake in them.
+- GUI polish is low severity. This is a file picker and a dropdown.
+
+## Do not comment on
+
+- Tkinter's dated appearance, or suggestions to adopt Qt/Flet/web stacks. The
+  toolkit choice is deliberate: zero dependencies and a 66 MB bundle.
+- The absence of code signing or notarisation. Known and documented.
+- Bundle size, unless a change makes it materially worse.
+- `# noqa: BLE001` on the broad `except` in `convert_file`. Intentional.
+- Missing type annotations on Tk callbacks.

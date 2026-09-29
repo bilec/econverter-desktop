@@ -28,31 +28,21 @@ Output: `azw3`, `docx`, `epub`, `fb2`, `html`, `htmlz`, `lrf`, `mobi`, `oeb`,
 The lists are read from the conversion engine at startup, so they cannot drift.
 
 PDF input supports text-based PDFs. Scanned PDFs require OCR, which is not
-supported here.
+supported.
 
-PDF conversion works out of the box: when the Poppler tools (`pdftohtml`,
-`pdfinfo`, `pdftoppm`) are absent the engine falls back to pure-Python `pypdf`
-text extraction, the same path the Android app uses. Installing Poppler
-(`brew install poppler`, `apt install poppler-utils`, or the Windows binaries)
-upgrades PDF conversion to preserve images and layout.
-
-## Run from source
+## Development
 
 ```bash
 uv sync --group dev
-uv run python -m econverter_desktop
-```
-
-## Tests
-
-```bash
+uv run python -m econverter_desktop   # run the GUI
 uv run pytest
 uv run ruff check .
 uv run ruff format --check .
 ```
 
 CI runs the same checks on Linux, macOS and Windows, plus real md→epub→mobi and
-PDF→epub conversions on each.
+PDF→epub conversions on each. See [AGENTS.md](AGENTS.md) and
+[CODEBASE_MAP.md](CODEBASE_MAP.md).
 
 ## Build a standalone app
 
@@ -61,9 +51,8 @@ uv run pyinstaller econverter.spec
 ```
 
 Output lands in `dist/` — `eConverter.app` on macOS, `dist/econverter/` with an
-`econverter` executable on Linux and Windows. Build on the platform you are
-targeting; PyInstaller does not cross-compile, so releases are built by a
-three-OS GitHub Actions matrix.
+`econverter` executable on Linux and Windows. PyInstaller does not
+cross-compile, so releases are built by a three-OS GitHub Actions matrix.
 
 ## Headless conversion
 
