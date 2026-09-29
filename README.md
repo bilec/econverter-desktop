@@ -63,16 +63,6 @@ Output lands in `dist/` — `eConverter.app` on macOS, `dist/econverter/` with a
 targeting; PyInstaller does not cross-compile, so releases are built by a
 three-OS GitHub Actions matrix.
 
-## Releasing
-
-Push a `v*` tag. The release workflow builds all three platforms, smoke-tests
-each frozen binary with an actual conversion, and attaches the archives to a
-GitHub release.
-
-```bash
-git tag v0.1.0 && git push origin v0.1.0
-```
-
 ## Headless conversion
 
 Passing an input file and an output format converts without opening the GUI —
@@ -85,5 +75,6 @@ uv run python -m econverter_desktop book.docx epub
 
 ## License
 
-GPL-3.0-or-later, inherited from Calibre via `ebook-converter-lib`. The icon is
-taken from the Android [eConverter](https://github.com/bilec/econverter) app.
+[GPL-3.0-or-later](LICENSE), inherited from Calibre via
+`ebook-converter-lib`. The icon is taken from the Android
+[eConverter](https://github.com/bilec/econverter) app.
