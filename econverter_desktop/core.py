@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -13,8 +12,6 @@ from ebook_converter.customize.ui import available_output_formats, input_format_
 INPUT_FORMATS = tuple(sorted({f for plugin in input_format_plugins() for f in plugin.file_types}))
 OUTPUT_FORMATS = tuple(sorted(available_output_formats()))
 DEFAULT_OUTPUT = "epub"
-
-POPPLER_TOOL = "pdftohtml"
 
 
 @dataclass(frozen=True)
@@ -38,10 +35,6 @@ def output_path(src: Path, fmt: str, dest_dir: Path | None = None) -> Path:
     if fmt not in OUTPUT_FORMATS:
         raise ValueError(f"unsupported output format: {fmt}")
     return (dest_dir or src.parent) / f"{src.stem}.{fmt}"
-
-
-def poppler_available() -> bool:
-    return shutil.which(POPPLER_TOOL) is not None
 
 
 def convert_file(src: Path, fmt: str, dest_dir: Path | None = None) -> Result:
