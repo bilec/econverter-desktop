@@ -213,12 +213,11 @@ wheels = [
 
 [[package]]
 name = "ebook-converter-lib"
-version = "1.1.0"
+version = "1.2.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
     { name = "css-parser" },
-    { name = "filelock" },
     { name = "html2text" },
     { name = "lxml" },
     { name = "markdown" },
@@ -228,16 +227,15 @@ dependencies = [
     { name = "python-dateutil" },
     { name = "reportlab" },
     { name = "svglib" },
-    { name = "tinycss" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/98/9d/71fced1abaf69e245863470978d81de8bc4ab3b85bb27aebd80db867fdea/ebook_converter_lib-1.1.0.tar.gz", hash = "sha256:01cc581b8141bcf2875e3650227f574d1a3c40eb86a584199fd3fcbc2799d3f2", size = 1488582, upload-time = "2026-09-29T15:17:47.258Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/51/98/bfe078fb8a5e1cdb253a4ba94fb910cec448b6921a1462c47ccca9453168/ebook_converter_lib-1.2.1.tar.gz", hash = "sha256:bfb7c6b639a8922a4f29251e6c5752ae08cc008a00036a9095beae093e781797", size = 1480254, upload-time = "2026-10-13T16:31:09.084Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f9/c8/5af217cd0d262646509aa5e5ec703519b7ff0e5fea0c8e2fbb31f5c8285b/ebook_converter_lib-1.1.0-py3-none-any.whl", hash = "sha256:76bacf87332e41fc47780ecb6467226c5a956c7785fdb14cfc353d54fb930e36", size = 1667685, upload-time = "2026-09-29T15:17:45.541Z" },
+    { url = "https://files.pythonhosted.org/packages/9b/5e/5e799c8c7bff6a7ff0b61d803086335eece16c042505931dafc4e4282c04/ebook_converter_lib-1.2.1-py3-none-any.whl", hash = "sha256:32c4b9a8fb622b4810dad6f565f681e4e49280b9263cbb57d8546e0234733047", size = 1652682, upload-time = "2026-10-13T16:31:07.084Z" },
 ]
 
 [[package]]
 name = "econverter-desktop"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "ebook-converter-lib" },
@@ -251,22 +249,13 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "ebook-converter-lib", specifier = ">=1.1.0" }]
+requires-dist = [{ name = "ebook-converter-lib", specifier = ">=1.2.1" }]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "pyinstaller", specifier = ">=6.10" },
     { name = "pytest", specifier = ">=8" },
     { name = "ruff", specifier = ">=0.6" },
-]
-
-[[package]]
-name = "filelock"
-version = "4.0.6"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/2b/2d/5cb7a5ac017031e96a63173f3d57a8a5162ce36f9ff461e62bc6da4d88ab/filelock-4.0.6.tar.gz", hash = "sha256:323fab3b2fb22d889b29fa83774f60029addddb4b6a1bcfa1e73066eabffb5f2", size = 248237, upload-time = "2026-09-28T22:16:16.257Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a9/3b/b74ae9db2f78f1354278731372ae89870626be7b86cbb46b8d707acd1a98/filelock-4.0.6-py3-none-any.whl", hash = "sha256:9b139fb93b2ac5807f7feaf63aa4546fbd74074a2d3f554c040f40a4694d7b9f", size = 109077, upload-time = "2026-09-28T22:16:14.731Z" },
 ]
 
 [[package]]
@@ -723,25 +712,15 @@ wheels = [
 
 [[package]]
 name = "svglib"
-version = "2.2.0"
+version = "1.5.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cssselect2" },
     { name = "lxml" },
-    { name = "pillow" },
     { name = "reportlab" },
     { name = "tinycss2" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ca/92/3556caee194b318d7daff8d7bf4a1e16d3fca548f322b6b9bae3bc353897/svglib-2.2.0.tar.gz", hash = "sha256:bde5c5f9b0e091f1e210b8aafdda07a49bd8ebf21c0e90d67383a665c83597ac", size = 1373629, upload-time = "2026-08-14T12:02:25.803Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/76/c6/6c1d8b1899be627dada5650a24d8f3cb86a7cd2dd24c59edd1de0cc273e5/svglib-2.2.0-py3-none-any.whl", hash = "sha256:b0f07af5f1c8c77fa4e5788825af9aa4e21e005127997f02031b11edadca96f9", size = 49530, upload-time = "2026-08-14T12:02:24.351Z" },
-]
-
-[[package]]
-name = "tinycss"
-version = "0.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/05/59/af583fff6236c7d2f94f8175c40ce501dcefb8d1b42e4bb7a2622dff689e/tinycss-0.4.tar.gz", hash = "sha256:12306fb50e5e9e7eaeef84b802ed877488ba80e35c672867f548c0924a76716e", size = 87759, upload-time = "2016-09-23T16:30:14.894Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/56/5b/53ca0fd447f73423c7dc59d34e523530ef434481a3d18808ff7537ad33ec/svglib-1.5.1.tar.gz", hash = "sha256:3ae765d3a9409ee60c0fb4d24c2deb6a80617aa927054f5bcd7fc98f0695e587", size = 913900, upload-time = "2023-01-07T14:11:52.99Z" }
 
 [[package]]
 name = "tinycss2"
