@@ -5,7 +5,7 @@ engine). Distributed as a PyInstaller bundle, not as a pip package.
 
 ## Stack
 
-- Python 3.11, uv for dependency management and virtualenvs
+- Python 3.11 to 3.14, uv for dependency management and virtualenvs
 - Tkinter for the GUI (stdlib, no GUI dependencies)
 - pytest for tests, ruff for lint and format
 - PyInstaller for macOS/Linux/Windows bundles
