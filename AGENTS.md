@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Desktop GUI wrapper around `ebook-converter-lib` (a Calibre-derived conversion
-engine). Distributed as a PyInstaller bundle, not as a pip package.
+engine) and `boko-python`. Distributed as a PyInstaller bundle, not as a pip package.
 
 ## Stack
 
@@ -35,18 +35,21 @@ index cache. Use `uv lock --refresh-package ebook-converter-lib`.
 headlessly. `app.py` is a thin Tk layer that marshals work onto a worker thread
 and drains a queue via `after()`. `__main__.py` chooses GUI or headless mode.
 
-Format lists are derived from the engine at import time, never hardcoded.
-`INPUT_FORMATS` comes from `input_format_plugins()` rather than
+Calibre format lists are derived from its plugins at import time.
+Calibre inputs come from `input_format_plugins()` rather than
 `available_input_formats()`, because the latter advertises `zip` and `rar`
-with no plugin behind either.
+with no plugin behind either. Boko formats match the pinned bindings in `core.py`.
+Auto combines both engines through temporary EPUBs for KFX input and KFX/Markdown
+output; direct Boko skips Calibre conversion. Backend-specific lists drive both
+validation and the GUI. Workers snapshot the chosen backend before starting.
 
 ## Conventions
 
 - `core.convert_file` returns `Result(success, message)` and never raises; the
   GUI must not be able to crash on a malformed book
 - Tests are written before the fix, and every bug fix gets a regression test
-- Test files mirror the module: `test_core.py`, `test_entrypoint.py`
-- Tests never perform real conversions; `core._convert` is monkeypatched.
+- Test files mirror the module: `test_core.py`, `test_app.py`, `test_entrypoint.py`
+- Tests never perform real conversions; `core._convert` and `core._convert_boko` are monkeypatched.
   Real conversions belong in CI, against the frozen binary
 - ruff `line-length = 100`; run `ruff format` before committing
 - Conventional Commits, imperative subject, body explains why
@@ -69,6 +72,7 @@ modules move or entrypoints change.
 
 - **engine** - `ebook_converter`, the vendored Calibre-derived conversion code
 - **bridge** - `ebook_converter_lib.convert`, the public entry point used here
+- **Boko** - native engine exposed by `boko_python.convert`; bundled by PyInstaller
 - **frozen build** - the PyInstaller output in `dist/`
 - **Poppler** - optional external tools the engine uses for PDF input when
   present. Not required and not surfaced in the UI, matching the Android app;

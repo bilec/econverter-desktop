@@ -44,6 +44,18 @@ jobs:
           test -s book.epub
           uv run python -m econverter_desktop book.epub mobi
           test -s book.mobi
+          uv run python -m econverter_desktop book.epub kfx
+          test -s book.kfx
+          uv run python -m econverter_desktop book.kfx mobi
+          test -s book.mobi
+          uv run python -m econverter_desktop book.epub azw3 boko
+          test -s book.azw3
+          uv run python -m econverter_desktop book.azw3 md boko
+          test -s book.md
+          uv run python -m econverter_desktop book.azw3 kfx boko
+          test -s book.kfx
+          uv run python -m econverter_desktop book.kfx epub boko
+          test -s book.epub
           uv run --with reportlab python -c "
           from reportlab.pdfgen import canvas
           c = canvas.Canvas('from-pdf.pdf'); c.drawString(72, 720, 'Extractable text'); c.save()

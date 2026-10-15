@@ -11,11 +11,6 @@ from tkinter import filedialog, ttk
 
 from . import core
 
-FILE_TYPES = [
-    ("Ebooks", " ".join(f"*.{ext}" for ext in core.INPUT_FORMATS)),
-    ("All files", "*.*"),
-]
-
 
 def asset(name: str) -> Path:
     """Resolve a bundled asset, both from source and from a PyInstaller bundle."""
@@ -45,6 +40,13 @@ class App(ttk.Frame):
         bar.grid(row=0, column=0, sticky="ew")
         ttk.Button(bar, text="Add files…", command=self.add_files).pack(side="left")
         ttk.Button(bar, text="Clear", command=self.clear_files).pack(side="left", padx=(6, 0))
+        self.backend = tk.StringVar(value="auto")
+        backend_box = ttk.Combobox(
+            bar, textvariable=self.backend, values=core.BACKENDS, state="readonly", width=8
+        )
+        backend_box.pack(side="right")
+        backend_box.bind("<<ComboboxSelected>>", self._select_backend)
+        ttk.Label(bar, text="Backend:").pack(side="right", padx=6)
 
         self.file_list = tk.Listbox(self, height=8, selectmode="extended")
         self.file_list.grid(row=1, column=0, sticky="nsew", pady=8)
@@ -53,13 +55,14 @@ class App(ttk.Frame):
         options.grid(row=2, column=0, sticky="ew")
         ttk.Label(options, text="Convert to:").pack(side="left")
         self.fmt = tk.StringVar(value=core.DEFAULT_OUTPUT)
-        ttk.Combobox(
+        self.format_box = ttk.Combobox(
             options,
             textvariable=self.fmt,
             values=list(core.OUTPUT_FORMATS),
             state="readonly",
             width=8,
-        ).pack(side="left", padx=6)
+        )
+        self.format_box.pack(side="left", padx=6)
         self.dest_label = ttk.Label(options, text="Output: next to source")
         self.dest_label.pack(side="left", padx=(12, 6))
         ttk.Button(options, text="Choose…", command=self.choose_dest).pack(side="left")
@@ -72,11 +75,21 @@ class App(ttk.Frame):
         self.rowconfigure(4, weight=1)
 
     def add_files(self) -> None:
-        for name in filedialog.askopenfilenames(title="Select ebooks", filetypes=FILE_TYPES):
+        file_types = [
+            ("Ebooks", " ".join(f"*.{ext}" for ext in core.input_formats(self.backend.get()))),
+            ("All files", "*.*"),
+        ]
+        for name in filedialog.askopenfilenames(title="Select ebooks", filetypes=file_types):
             path = Path(name)
             if path not in self.sources:
                 self.sources.append(path)
                 self.file_list.insert("end", path.name)
+
+    def _select_backend(self, event=None) -> None:
+        formats = core.output_formats(self.backend.get())
+        self.format_box.configure(values=formats)
+        if self.fmt.get() not in formats:
+            self.fmt.set(core.DEFAULT_OUTPUT)
 
     def clear_files(self) -> None:
         self.sources.clear()
@@ -91,15 +104,24 @@ class App(ttk.Frame):
         if not self.sources:
             self._write("Add at least one file.")
             return
+        backend = self.backend.get()
+        unsupported = [
+            src.name for src in self.sources if not core.is_supported_input(src, backend)
+        ]
+        if unsupported:
+            self._write(f"Unsupported input for {backend}: {', '.join(unsupported)}")
+            return
         self.convert_button.state(["disabled"])
         threading.Thread(
-            target=self._run, args=(list(self.sources), self.fmt.get(), self.dest_dir), daemon=True
+            target=self._run,
+            args=(list(self.sources), self.fmt.get(), self.dest_dir, backend),
+            daemon=True,
         ).start()
 
-    def _run(self, sources: list[Path], fmt: str, dest_dir: Path | None) -> None:
+    def _run(self, sources: list[Path], fmt: str, dest_dir: Path | None, backend: str) -> None:
         for src in sources:
             self.events.put(("log", f"Converting {src.name} → {fmt}…"))
-            result = core.convert_file(src, fmt, dest_dir)
+            result = core.convert_file(src, fmt, dest_dir, backend)
             self.events.put(("log", f"  {'OK' if result.success else 'FAILED'}: {result.message}"))
         self.events.put(("done", ""))
 

@@ -42,3 +42,17 @@ def test_failed_conversion_exits_nonzero(monkeypatch, no_gui):
     monkeypatch.setattr(sys, "argv", ["econverter", "book.docx", "epub"])
     monkeypatch.setattr(entry.core, "convert_file", lambda *a: entry.core.Result(False, "bad"))
     assert entry.main() == 1
+
+
+def test_optional_backend_is_forwarded(monkeypatch, no_gui):
+    calls = []
+    monkeypatch.setattr(sys, "argv", ["econverter", "book.epub", "kfx", "boko"])
+
+    def convert(*args, **kwargs):
+        calls.append((args, kwargs))
+        return entry.core.Result(True, "ok")
+
+    monkeypatch.setattr(entry.core, "convert_file", convert)
+    assert entry.main() == 0
+    assert calls[0][1] == {"backend": "boko"}
+    assert not no_gui

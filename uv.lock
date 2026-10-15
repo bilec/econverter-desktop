@@ -25,6 +25,17 @@ wheels = [
 ]
 
 [[package]]
+name = "boko-python"
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/d1/cfed8dafd23008329749cf5018ffacefaaa16771dad9de7730c7286c8d60/boko_python-0.1.2.tar.gz", hash = "sha256:2024a1cc1062a5ee5b800a4597411b52c8cbd5e31e0c554f2429599eb2c04198", size = 34893, upload-time = "2026-10-14T20:53:43.768Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/eb/14/cd1b2bf4d0d632010d1896df0e7cc90c47acc8b9c91497cc977bab768979/boko_python-0.1.2-cp311-abi3-macosx_11_0_arm64.whl", hash = "sha256:e4a39cd80b8f4e924573d32e3840989b3bd03cc01b4f59adca6c7ae6b2758a31", size = 1490271, upload-time = "2026-10-14T20:53:38.437Z" },
+    { url = "https://files.pythonhosted.org/packages/91/5b/3e98b98bec043037c69940ef161bb564247cbe0d5ba020127962ffc1e9ad/boko_python-0.1.2-cp311-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6898bfe3454f60c4e59e57ef58969a0a78e714572cadbcf706030d8aad612b77", size = 1639858, upload-time = "2026-10-14T20:53:40.162Z" },
+    { url = "https://files.pythonhosted.org/packages/36/39/9514963cb7600851865e2c21847da8f3e42a892497830b0f368c015f1785/boko_python-0.1.2-cp311-abi3-win_amd64.whl", hash = "sha256:813097c6eb39e54e27f5c93dae19d6c2c8ba2fcae1b3c1bf2107eaa11b9177b0", size = 1565940, upload-time = "2026-10-14T20:53:41.754Z" },
+]
+
+[[package]]
 name = "charset-normalizer"
 version = "3.5.1"
 source = { registry = "https://pypi.org/simple" }
@@ -206,6 +217,7 @@ name = "econverter-desktop"
 version = "0.1.1"
 source = { editable = "." }
 dependencies = [
+    { name = "boko-python" },
     { name = "ebook-converter-lib" },
 ]
 
@@ -217,7 +229,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "ebook-converter-lib", specifier = ">=1.2.1" }]
+requires-dist = [
+    { name = "boko-python", specifier = "==0.1.2" },
+    { name = "ebook-converter-lib", specifier = ">=1.2.1" },
+]
 
 [package.metadata.requires-dev]
 dev = [

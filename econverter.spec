@@ -6,7 +6,7 @@ ICON = {"darwin": "assets/icon.icns", "win32": "assets/icon.ico"}.get(sys.platfo
 
 # ebook_converter ships templates, XSLT and encoding data that PyInstaller cannot see.
 datas, binaries, hiddenimports = [], [], []
-for package in ("ebook_converter", "ebook_converter_lib", "html5_parser", "msgpack"):
+for package in ("ebook_converter", "ebook_converter_lib", "boko_python", "html5_parser", "msgpack"):
     pkg_datas, pkg_binaries, pkg_hidden = collect_all(package)
     datas += pkg_datas
     binaries += pkg_binaries

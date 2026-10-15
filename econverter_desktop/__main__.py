@@ -4,7 +4,7 @@ import os
 import sys
 from pathlib import Path
 
-USAGE = "usage: econverter [INPUT_FILE OUTPUT_FORMAT]"
+USAGE = "usage: econverter [INPUT_FILE OUTPUT_FORMAT [auto|calibre|boko]]"
 
 
 def _attach_console() -> None:
@@ -42,11 +42,14 @@ def main() -> int:
     if not args:
         _launch_gui()
         return 0
-    if len(args) != 2:
+    if len(args) not in (2, 3):
         print(USAGE, file=sys.stderr)
         return 2
 
-    result = core.convert_file(Path(args[0]), args[1])
+    if len(args) == 3:
+        result = core.convert_file(Path(args[0]), args[1], backend=args[2])
+    else:
+        result = core.convert_file(Path(args[0]), args[1])
     print(result.message)
     return 0 if result.success else 1
 

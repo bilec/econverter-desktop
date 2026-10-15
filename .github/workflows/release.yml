@@ -42,6 +42,18 @@ jobs:
           test -s book.epub
           "${{ matrix.binary }}" book.epub mobi
           test -s book.mobi
+          "${{ matrix.binary }}" book.epub kfx
+          test -s book.kfx
+          "${{ matrix.binary }}" book.kfx mobi
+          test -s book.mobi
+          "${{ matrix.binary }}" book.epub azw3 boko
+          test -s book.azw3
+          "${{ matrix.binary }}" book.azw3 md boko
+          test -s book.md
+          "${{ matrix.binary }}" book.azw3 kfx boko
+          test -s book.kfx
+          "${{ matrix.binary }}" book.kfx epub boko
+          test -s book.epub
 
       - name: Package (macOS)
         if: runner.os == 'macOS'
