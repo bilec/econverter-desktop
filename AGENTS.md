@@ -74,6 +74,6 @@ modules move or entrypoints change.
 - **bridge** - `ebook_converter_lib.convert`, the public entry point used here
 - **Boko** - native engine exposed by `boko_python.convert`; bundled by PyInstaller
 - **frozen build** - the PyInstaller output in `dist/`
-- **Poppler** - optional external tools the engine uses for PDF input when
-  present. Not required and not surfaced in the UI, matching the Android app;
-  without them the engine falls back to pure-Python `pypdf` extraction
+- **PDFium** - PDF engine the bridge uses through `pypdfium2`; ships as a wheel
+  dependency and is bundled by pyinstaller-hooks-contrib. No external tools,
+  matching the Android app

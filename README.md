@@ -49,7 +49,9 @@ EPUB by Boko before Calibre runs. For KFX or Markdown output, Calibre produces a
 temporary EPUB and Boko writes the final file. Other conversions use Calibre.
 Temporary files are removed on success or failure.
 
-PDF input supports text-based PDFs. Scanned PDFs require OCR, which is not
+PDF input supports text-based PDFs. Text, embedded images, bookmarks (as table
+of contents), title and a first-page cover are read with PDFium. Scanned PDFs
+require OCR, which is not
 supported. PDF input requires `auto` or `calibre`.
 
 ## Development

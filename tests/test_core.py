@@ -204,7 +204,7 @@ def test_convert_file_allows_same_format_into_another_folder(tmp_path, monkeypat
 
 
 def test_pdf_is_a_supported_input(tmp_path, monkeypatch):
-    """PDF never needs external binaries: the engine falls back to pypdf."""
+    """PDF never needs external binaries: the engine bundles PDFium."""
     src = tmp_path / "book.pdf"
     src.write_bytes(b"x")
     monkeypatch.setattr(core, "_convert", lambda *a, **k: {"success": True, "message": "ok"})

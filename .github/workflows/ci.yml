@@ -35,7 +35,7 @@ jobs:
       - run: uv sync --group dev
       - run: uv run pytest -q
       # Conversion must work on every OS, not just where tests are mocked.
-      # No Poppler is installed here on purpose: PDF must work via the pypdf fallback.
+      # PDF goes through the engine's bundled PDFium; no external tools are installed.
       - name: Convert real books
         shell: bash
         run: |

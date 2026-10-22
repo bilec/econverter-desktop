@@ -54,6 +54,13 @@ jobs:
           test -s book.kfx
           "${{ matrix.binary }}" book.kfx epub boko
           test -s book.epub
+          # libpdfium is bundled by a pyinstaller-hooks-contrib hook, only a frozen run proves it
+          uv run --with reportlab python -c "
+          from reportlab.pdfgen import canvas
+          c = canvas.Canvas('from-pdf.pdf'); c.drawString(72, 720, 'Extractable text'); c.save()
+          "
+          "${{ matrix.binary }}" from-pdf.pdf epub
+          test -s from-pdf.epub
 
       - name: Package (macOS)
         if: runner.os == 'macOS'
@@ -88,5 +95,5 @@ jobs:
             Unsigned builds. macOS: right-click → Open, or
             `xattr -dr com.apple.quarantine eConverter.app`.
 
-            PDF input works out of the box (text-only). Install Poppler
-            (`pdftohtml`, `pdfinfo`, `pdftoppm`) to also keep images and layout.
+            PDF input needs no external tools: text, embedded images, bookmarks,
+            title and a first-page cover are read with PDFium.

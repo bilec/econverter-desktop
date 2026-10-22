@@ -34,7 +34,7 @@ alwaysApply: true
   than `ebook_converter_lib`): it works, but an upstream refactor breaks
   startup. Require a test that fails loudly.
 - New external binary dependencies. PDF works with no external tools via the
-  engine's `pypdf` fallback; making one mandatory is a behaviour change.
+  engine's bundled PDFium (`pypdfium2`); making one mandatory is a behaviour change.
 - UI notices about optional external tools. The Android app does not surface
   them and neither should this one.
 - Temporary compatibility shims. They need a test that fails when the shim
