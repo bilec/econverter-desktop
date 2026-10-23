@@ -192,7 +192,7 @@ wheels = [
 
 [[package]]
 name = "ebook-converter-lib"
-version = "1.3.0"
+version = "1.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -207,9 +207,9 @@ dependencies = [
     { name = "reportlab" },
     { name = "svglib" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/88/88/494f0446b608c7f64c4ba1b585a1fef70fee052e1b9cc23f1606ce23f111/ebook_converter_lib-1.3.0.tar.gz", hash = "sha256:c63525faf002c52de80d588b6bfaf97dd9ad6ecb6c3e6a059e5d2a7b7c6ee7cd", size = 1480583, upload-time = "2026-10-23T14:19:47.001Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/79/15/c36950f8379d453e453ddfdf3c86eaa07c83bc8859f6458e3cc464d8367e/ebook_converter_lib-1.4.0.tar.gz", hash = "sha256:09a59a2c657bcc2774e7e9ea6492dc8f19451305249700d514bb240a1ef9d0c7", size = 1483564, upload-time = "2026-10-23T16:17:51.789Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/41/6f/3a048acbfb7ab54c1d3d3952de4a39df1d2bff78dc0222c08a34252f1cef/ebook_converter_lib-1.3.0-py3-none-any.whl", hash = "sha256:26b490001e33e4e85403f10475ce37ae1e5bb28ab023aae1738762fdc787ed18", size = 1651321, upload-time = "2026-10-23T14:19:45.299Z" },
+    { url = "https://files.pythonhosted.org/packages/91/06/f65e83b358eda49281825c7596c5fea53a9cd8f9b10b60581006aa7ebfa4/ebook_converter_lib-1.4.0-py3-none-any.whl", hash = "sha256:bdadc0123ce7824a7da915a9b98e0bb3cbfdf99efc0cae16e569fdb887226c9e", size = 1653301, upload-time = "2026-10-23T16:17:49.96Z" },
 ]
 
 [[package]]
@@ -231,7 +231,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "boko-python", specifier = "==0.1.2" },
-    { name = "ebook-converter-lib", specifier = ">=1.3.0" },
+    { name = "ebook-converter-lib", specifier = ">=1.4.0" },
 ]
 
 [package.metadata.requires-dev]
