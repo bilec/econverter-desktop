@@ -28,7 +28,7 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-      - run: uv sync --group dev
+      - run: uv sync --locked --group dev
       - run: uv run pytest -q
       - run: uv run pyinstaller --noconfirm --clean econverter.spec
 
